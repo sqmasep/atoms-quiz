@@ -9,6 +9,7 @@ module.exports = {
   },
   plugins: [],
   rules: {
+    "arrow-body-style": ["error", "never"],
     "react/function-component-definition": "off",
   },
 };
