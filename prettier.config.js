@@ -8,5 +8,5 @@ module.exports = {
   arrowParens: "avoid",
 
   plugins: ["prettier-plugin-tailwindcss"],
-  tailwindFunctions: ["t", "clsx", "cn", "cva", "twMerge"],
+  tailwindFunctions: ["tv", "clsx", "cn", "cva", "twMerge"],
 };
