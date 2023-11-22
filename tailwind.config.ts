@@ -3,6 +3,7 @@ import tailwindAnimate from "tailwindcss-animate";
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ["class"],
+
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -10,6 +11,11 @@ module.exports = {
     "./src/**/*.{ts,tsx}",
   ],
   theme: {
+    fontFamily: {
+      // FIXME [PRODUCTION] this won't display Geist to the user, i have it installed locally, that's why it works
+      sans: ["Geist", "sans-serif"],
+      mono: ["Geist Mono", "monospace"],
+    },
     container: {
       center: true,
       padding: "2rem",
@@ -17,6 +23,7 @@ module.exports = {
         "2xl": "1400px",
       },
     },
+
     extend: {
       colors: {
         border: "hsl(var(--border))",
