@@ -41,8 +41,8 @@
       "}",
       "",
       "const ${TM_FILENAME_BASE}: React.FC<${TM_FILENAME_BASE}Props & Omit<React.ComponentPropsWithoutRef<\"div\">, keyof ${TM_FILENAME_BASE}Props>> = ({ ...props }) => {",
-      "\treturn <div {...props}>$1</div>",
-      "}",
+      "\treturn <div {...props}>${1:${TM_FILENAME_BASE}}</div>;",
+      "};",
       "",
       "export default ${TM_FILENAME_BASE};"
     ],
@@ -74,7 +74,7 @@
       "\t\t\tkeyof ${TM_FILENAME_BASE}Props | keyof VariantProps<typeof ${TM_FILENAME_BASE/(.)(.*)/${1:/downcase}${2}/}>",
       "\t\t>",
       "> = ({ $0, ...props }) => {",
-      "\treturn <div {...props} className={${TM_FILENAME_BASE/(.)(.*)/${1:/downcase}${2}/}({ $0 })}>$2</div>",
+      "\treturn <div {...props} className={${TM_FILENAME_BASE/(.)(.*)/${1:/downcase}${2}/}({ $0 })}>${2:${TM_FILENAME_BASE}}</div>",
       "}",
       "",
       "export default ${TM_FILENAME_BASE};"

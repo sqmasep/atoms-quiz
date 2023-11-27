@@ -1,3 +1,4 @@
+import type { Variants } from "framer-motion";
 import type { LiteralUnion as TypeFestLiteralUnion } from "type-fest";
 
 export type NonEmptyTuple<TElement> = readonly [TElement, ...TElement[]];
@@ -15,3 +16,5 @@ export type Except<
 export interface WithChildren {
   children: React.ReactNode;
 }
+
+export type AnimationRelation = Record<"parent" | "child", Variants>;
