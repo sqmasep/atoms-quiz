@@ -10,6 +10,7 @@ module.exports = {
   plugins: [],
   rules: {
     "arrow-body-style": "off",
+    "no-duplicate-imports": "off",
     "react/function-component-definition": "off",
   },
 };
