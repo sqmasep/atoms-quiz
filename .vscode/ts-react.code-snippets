@@ -36,13 +36,15 @@
   "React component with props and spreading": {
     "prefix": "rcpspread, rcispread",
     "body": [
+      "import type { PropsOverrides } from \"~/utils/types\";",
+      "",
       "interface ${TM_FILENAME_BASE}Props {",
       "\t$0",
       "}",
       "",
-      "const ${TM_FILENAME_BASE}: React.FC<${TM_FILENAME_BASE}Props & Omit<React.ComponentPropsWithoutRef<\"div\">, keyof ${TM_FILENAME_BASE}Props>> = ({ ...props }) => {",
-      "\treturn <div {...props}>$1</div>",
-      "}",
+      "const ${TM_FILENAME_BASE}: React.FC<PropsOverrides<\"div\", ${TM_FILENAME_BASE}Props>> = ({ ...props }) => {",
+      "\treturn <div {...props}>${1:${TM_FILENAME_BASE}}</div>;",
+      "};",
       "",
       "export default ${TM_FILENAME_BASE};"
     ],
