@@ -1,7 +1,6 @@
 "use client";
 
 import { tv } from "tailwind-variants";
-import type { Variants } from "framer-motion";
 import { motion } from "framer-motion";
 import type { VariantProps } from "tailwind-variants";
 import type { AnimationRelation } from "~/utils/types";
