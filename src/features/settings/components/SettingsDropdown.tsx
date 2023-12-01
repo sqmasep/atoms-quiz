@@ -15,11 +15,10 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 
-interface SettingsDropdownProps {}
+// interface SettingsDropdownProps {}
 
 const SettingsDropdown: React.FC<
-  SettingsDropdownProps &
-    Omit<React.ComponentPropsWithoutRef<"div">, keyof SettingsDropdownProps>
+  React.ComponentPropsWithoutRef<typeof DropdownMenu>
 > = ({ ...props }) => {
   return (
     <DropdownMenu>
