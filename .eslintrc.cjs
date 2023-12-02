@@ -1,6 +1,10 @@
 module.exports = {
   env: { browser: true, es2020: true, node: true },
-  extends: ["eskiu/ts-react", "next/core-web-vitals"],
+  extends: [
+    "eskiu/ts-react",
+    "next/core-web-vitals",
+    "plugin:valtio/recommended",
+  ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
     project: "./tsconfig.json",
