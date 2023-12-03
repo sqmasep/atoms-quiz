@@ -11,6 +11,7 @@ const AnswerContainer: React.FC<
     Omit<React.ComponentPropsWithoutRef<"div">, keyof AnswerContainerProps>
 > = ({ ...props }) => {
   const { answerType } = useModes();
+
   return (
     <div {...props} className="mx-auto mt-48 max-w-3xl">
       {answerType === "write-answer" && <WriteAnswerInput />}

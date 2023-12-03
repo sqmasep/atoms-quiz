@@ -1,9 +1,5 @@
 import { parse } from "valibot";
-import Atom from "~/components/Atom";
-import List from "~/components/List";
-import { Button } from "~/components/ui/button";
-import AnswerContainer from "~/features/answer/components/AnswerContainer";
-import Navbar from "~/layouts/Navbar";
+import GameHandler from "~/components/GameHandler";
 import { atomsSchema } from "~/lib/validation/atomSchema";
 
 export default async function Home() {
@@ -18,29 +14,11 @@ export default async function Home() {
 
   return (
     <main>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="pointer-events-none fixed inset-0 -z-10 bg-[url('/noise.gif')] bg-[length:300px] opacity-5" />
       <div className="pointer-events-none fixed top-10 -z-10 h-1/3 w-1/2 bg-slate-600 blur-[400px]" />
 
-      <AnswerContainer />
-
-      {/* <pre>{JSON.stringify(res, null, 2)}</pre> */}
-
-      {/* <div className="grid grid-cols-12">
-        <List of={atoms}>
-          {atom => (
-            <Atom
-              key={atom.atomicNumber}
-              atomicNumber={atom.atomicNumber}
-              symbol={atom.symbol}
-              name={atom.name.fr}
-              color="#000"
-              // FIXME [LAYOUT] w-[125px] is not a good solution and i need to fix the flex container
-              className="aspect-square w-[125px]"
-            />
-          )}
-        </List>
-      </div> */}
+      <GameHandler atoms={atoms} />
     </main>
   );
 }

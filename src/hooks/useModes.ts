@@ -61,7 +61,12 @@ const useModes = () => {
     queryParams.get("collection") ?? COLLECTION_OPTIONS[0].value,
   );
 
-  return { answerType, guess, collection, setMode: setQueryParams };
+  const sort = parse(
+    sortSchema,
+    queryParams.get("sort") ?? SORTING_OPTIONS[0].value,
+  );
+
+  return { answerType, guess, collection, sort, setMode: setQueryParams };
 };
 
 export default useModes;

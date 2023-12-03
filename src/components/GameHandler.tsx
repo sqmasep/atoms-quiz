@@ -1,46 +1,49 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import AnswerContainer from "~/features/answer/components/AnswerContainer";
 import AtomsCounter from "~/features/stats/components/AtomsCounter";
 import useModes from "~/hooks/useModes";
+import Navbar from "~/layouts/Navbar";
 import type { AtomsType } from "~/lib/validation/atomSchema";
-import type { WithChildren } from "~/utils/types";
+import { useProgression } from "~/stores/progression";
 
-interface GameHandlerProps extends WithChildren {
+interface GameHandlerProps {
   atoms: AtomsType;
 }
 
 const GameHandler: React.FC<
   GameHandlerProps &
     Omit<React.ComponentPropsWithoutRef<"div">, keyof GameHandlerProps>
-> = ({ children, atoms, ...props }) => {
-  const { answerType, collection, guess, setMode } = useModes();
+> = ({ atoms, ...props }) => {
+  const { answerType, collection, guess, sort } = useModes();
 
-  // TODO use
-  const sortedAtoms = atoms;
+  // TODO use `sort` mode
+  // const sortedAtoms = atoms;
 
-  const [currentAtom, setCurrentAtom] = useState(sortedAtoms[0]);
-  const [stats, setStats] = useState({
-    correct: 0,
-    incorrect: 0,
-  });
+  const progression = useProgression();
 
-  function giveAGuess(answer: string) {}
+  useEffect(() => {
+    progression.setAtoms(atoms);
+  }, [atoms, progression]);
 
-  function nextQuestion() {
-    const nextAtom = sortedAtoms[sortedAtoms.indexOf(currentAtom) + 1];
-    setCurrentAtom(nextAtom);
-  }
+  // function nextQuestion() {
+  //   const nextAtom = sortedAtoms[sortedAtoms.indexOf(currentAtom) + 1];
+  //   setCurrentAtom(nextAtom);
+  // }
 
-  function resetGame() {
-    setStats(prev => ({ ...prev, correct: 0, incorrect: 0 }));
-  }
-
-  useEffect(() => {}, [answerType, collection, guess]);
+  // TODO probably should update `progression.atoms` when modes change and reset everything
+  // useEffect(() => {}, [answerType, collection, guess, sort]);
 
   return (
     <div {...props}>
-      <AtomsCounter currentCount={} />
+      <Navbar />
+      <AtomsCounter
+        currentCount={progression.correctAnswers}
+        outOf={progression.atoms.length}
+      />
+
+      <AnswerContainer />
     </div>
   );
 };
