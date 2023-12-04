@@ -14,12 +14,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { useSettings } from "~/stores/settings";
 
 // interface SettingsDropdownProps {}
 
 const SettingsDropdown: React.FC<
   React.ComponentPropsWithoutRef<typeof DropdownMenu>
 > = ({ ...props }) => {
+  const settings = useSettings();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -27,28 +30,42 @@ const SettingsDropdown: React.FC<
           <GearIcon />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent>
         <DropdownMenuLabel>Settings</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuCheckboxItem checked>
+        <DropdownMenuCheckboxItem
+          checked={settings.shouldShowTimer}
+          onCheckedChange={() => settings.toggleTimer()}
+        >
           <span className="flex grow items-center justify-between gap-6">
             Show timer
             <LapTimerIcon />
           </span>
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem>
+        <DropdownMenuCheckboxItem
+          checked={settings.shouldSkipAnimations}
+          onCheckedChange={() => settings.toggleAnimations()}
+        >
           <span className="flex grow items-center justify-between gap-6">
             Skip animations
             <MagicWandIcon />
           </span>
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem checked>
+        <DropdownMenuCheckboxItem
+          checked={settings.hasSound}
+          onCheckedChange={() => settings.toggleSound()}
+        >
           <span className="flex grow items-center justify-between gap-6">
             Enable sound
             <SpeakerLoudIcon />
           </span>
         </DropdownMenuCheckboxItem>
-        <DropdownMenuCheckboxItem checked>
+
+        <DropdownMenuCheckboxItem
+          checked={settings.shouldShowMinimap}
+          onCheckedChange={() => settings.toggleMinimap()}
+        >
           <span className="flex grow items-center justify-between gap-6">
             Show minimap
             <GridIcon />
