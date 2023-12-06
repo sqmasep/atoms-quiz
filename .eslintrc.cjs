@@ -14,6 +14,7 @@ module.exports = {
   plugins: [],
   rules: {
     "arrow-body-style": "off",
+    "quote-props": "off",
     "no-duplicate-imports": "off",
     "react/function-component-definition": "off",
   },
