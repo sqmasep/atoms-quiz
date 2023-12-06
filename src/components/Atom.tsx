@@ -1,10 +1,11 @@
 import { tv } from "tailwind-variants";
+import type { Nullish } from "~/utils/types";
 
 interface AtomProps {
-  atomicNumber: number;
-  symbol: string;
-  name: string;
-  color: string;
+  atomicNumber: Nullish<string | number>;
+  symbol: Nullish<string>;
+  name: Nullish<string>;
+  color: Nullish<string>;
 }
 
 // TODO variants & colors
