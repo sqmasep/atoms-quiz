@@ -12,3 +12,7 @@
 
 - `[PRODUCTION]` - An issue that needs to be fixed before production
 - `[LAYOUT]` - An issue that affects the layout of the page
+
+#### Specific tags
+
+- `[GUESS]` - About guess feature
