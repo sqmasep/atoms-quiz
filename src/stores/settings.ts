@@ -1,10 +1,11 @@
-import { proxy } from "valtio";
+import { proxy, useSnapshot } from "valtio";
 
 export const settingsStore = proxy({
   shouldShowTimer: true,
   shouldSkipAnimations: false,
   hasSound: true,
   shouldShowMinimap: true,
+  guessLanguage: "en" as "en" | "fr",
 
   toggleTimer: (force?: boolean) =>
     (settingsStore.shouldShowTimer = force ?? !settingsStore.shouldShowTimer),
@@ -18,4 +19,4 @@ export const settingsStore = proxy({
       force ?? !settingsStore.shouldShowMinimap),
 });
 
-export const useSettings = () => settingsStore;
+export const useSettings = () => useSnapshot(settingsStore);

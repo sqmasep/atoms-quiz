@@ -17,6 +17,11 @@ export const GUESS_OPTIONS = [
     icon: <LetterCaseCapitalizeIcon />,
   },
   {
+    value: "symbol",
+    label: "Symbol",
+    icon: <LetterCaseCapitalizeIcon />,
+  },
+  {
     value: "group",
     label: "Group",
     icon: <GroupIcon />,

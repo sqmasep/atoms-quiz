@@ -5,7 +5,7 @@ export const progressionStore = proxy({
   atoms: [] as AtomsType,
   currentAtom: null as AtomType | null,
 
-  correctAnswers: 0,
+  correctAnswers: 1,
   incorrectAnswers: 0,
 
   setAtoms: (atoms: AtomsType) => {
@@ -24,6 +24,18 @@ export const progressionStore = proxy({
 
   incrementIncorrect: () => {
     progressionStore.incorrectAnswers++;
+  },
+
+  nextQuestion: () => {
+    if (progressionStore.currentAtom) {
+      const currentIndex = progressionStore.atoms.indexOf(
+        progressionStore.currentAtom,
+      );
+
+      if (currentIndex < progressionStore.atoms.length - 1) {
+        progressionStore.currentAtom = progressionStore.atoms[currentIndex + 1];
+      }
+    }
   },
 
   reset: () => {
