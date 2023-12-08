@@ -21,9 +21,8 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <Progress
-        value={(progression.correctAnswers * 100) / progression.atoms.length}
-      />
+      <Progress value={progression.getProgressPercentage} />
+      {progression.hasWon ? "you won!" : ""}
 
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">

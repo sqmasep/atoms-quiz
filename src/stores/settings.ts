@@ -1,4 +1,8 @@
 import { proxy, useSnapshot } from "valtio";
+import {
+  GUESS_OPTIONS,
+  type GuessOptionValue,
+} from "~/features/modes/data/guessOptions";
 
 export const settingsStore = proxy({
   shouldShowTimer: true,
@@ -17,6 +21,28 @@ export const settingsStore = proxy({
   toggleMinimap: (force?: boolean) =>
     (settingsStore.shouldShowMinimap =
       force ?? !settingsStore.shouldShowMinimap),
+
+  atomView: GUESS_OPTIONS.map(a => a.value),
+  toggleAtomView: (value: GuessOptionValue, force?: boolean) => {
+    if (force === true) {
+      if (!settingsStore.atomView.includes(value))
+        settingsStore.atomView.push(value);
+      return;
+    }
+
+    if (force === false) {
+      if (settingsStore.atomView.includes(value)) {
+        settingsStore.atomView.splice(settingsStore.atomView.indexOf(value), 1);
+        return;
+      }
+    }
+
+    if (settingsStore.atomView.includes(value)) {
+      settingsStore.atomView.splice(settingsStore.atomView.indexOf(value), 1);
+    } else {
+      settingsStore.atomView.push(value);
+    }
+  },
 });
 
 export const useSettings = () => useSnapshot(settingsStore);

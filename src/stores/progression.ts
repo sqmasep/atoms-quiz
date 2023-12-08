@@ -7,6 +7,7 @@ export const progressionStore = proxy({
 
   correctAnswers: 1,
   incorrectAnswers: 0,
+  skippedAnswers: 0,
 
   setAtoms: (atoms: AtomsType) => {
     progressionStore.atoms = atoms;
@@ -17,13 +18,36 @@ export const progressionStore = proxy({
   },
 
   incrementCorrect: () => {
-    if (progressionStore.correctAnswers < progressionStore.atoms.length) {
+    if (
+      progressionStore.correctAnswers + progressionStore.skippedAnswers <
+      progressionStore.atoms.length
+    ) {
       progressionStore.correctAnswers++;
     }
   },
 
-  incrementIncorrect: () => {
-    progressionStore.incorrectAnswers++;
+  incrementIncorrect: () => progressionStore.incorrectAnswers++,
+
+  skip: () => {
+    if (
+      progressionStore.correctAnswers + progressionStore.skippedAnswers <
+      progressionStore.atoms.length
+    ) {
+      progressionStore.skippedAnswers++;
+    }
+    progressionStore.nextQuestion();
+  },
+
+  // WARN just switched to getter and `this`, see if it breaks in the future or not
+  // it should not, since now it's working as a computed property
+  get hasWon() {
+    return this.correctAnswers + this.skippedAnswers === this.atoms.length;
+  },
+
+  get getProgressPercentage() {
+    return (
+      ((this.correctAnswers + this.skippedAnswers) / this.atoms.length) * 100
+    );
   },
 
   nextQuestion: () => {
@@ -41,6 +65,7 @@ export const progressionStore = proxy({
   reset: () => {
     progressionStore.correctAnswers = 0;
     progressionStore.incorrectAnswers = 0;
+    progressionStore.skippedAnswers = 0;
   },
 });
 

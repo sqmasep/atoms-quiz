@@ -1,10 +1,11 @@
 import { tv } from "tailwind-variants";
 import type { Nullish } from "~/utils/types";
 
+// INFO React.ReactNode so we can render anything, if we want to mask the atomic number for example
 interface AtomProps {
-  atomicNumber: Nullish<string | number>;
-  symbol: Nullish<string>;
-  name: Nullish<string>;
+  atomicNumber: Nullish<React.ReactNode | number>;
+  symbol: Nullish<React.ReactNode>;
+  name: Nullish<React.ReactNode>;
   color: Nullish<string>;
 }
 
