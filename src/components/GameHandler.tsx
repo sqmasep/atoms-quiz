@@ -15,6 +15,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
+import PeriodicTable from "~/features/map/components/PeriodicTable";
+import { useSettings } from "~/stores/settings";
 
 interface GameHandlerProps {
   atoms: AtomsType;
@@ -27,6 +29,7 @@ const GameHandler: React.FC<
   const { answerType, collection, guess, sort } = useModes();
 
   const progression = useProgression();
+  const settings = useSettings();
 
   useEffect(() => {
     progression.reset();
@@ -35,8 +38,6 @@ const GameHandler: React.FC<
       if (sort === "atomic-number") return a.atomicNumber - b.atomicNumber;
       return 0;
     });
-
-    console.log(sortedAtoms);
 
     progression.setAtoms(sortedAtoms);
     progression.setCurrentAtom(sortedAtoms[0]);
@@ -51,7 +52,19 @@ const GameHandler: React.FC<
 
   function handlePlay() {
     progression.reset();
-    const sortedAtoms = atoms.toSorted((a, b) => {
+
+    const collectionAtoms =
+      collection === "all"
+        ? atoms
+        : atoms.filter(atom => {
+            if (collection === "s-block") return atom.block === "s";
+            if (collection === "p-block") return atom.block === "p";
+            if (collection === "d-block") return atom.block === "d";
+            if (collection === "f-block") return atom.block === "f";
+            // if (collection === "alkali-metals") return atom.group === 1;
+          });
+
+    const sortedAtoms = collectionAtoms.toSorted((a, b) => {
       if (sort === "random") return Math.random() - 0.5;
       if (sort === "atomic-number") return a.atomicNumber - b.atomicNumber;
       return 0;
@@ -93,6 +106,28 @@ const GameHandler: React.FC<
       </div>
       <AnswerContainer />
       <Button onClick={handlePlay}>play!</Button>
+
+      {!!settings.shouldShowMinimap && (
+        <PeriodicTable
+          atoms={atoms}
+          renderAtom={atom => (
+            <div
+              style={{
+                color: progression.atoms
+                  .slice(
+                    0,
+                    progression.correctAnswers + progression.skippedAnswers,
+                  )
+                  .some(a => a.atomicNumber === atom.atomicNumber)
+                  ? "red"
+                  : undefined,
+              }}
+            >
+              {atom.symbol}
+            </div>
+          )}
+        />
+      )}
     </div>
   );
 };
