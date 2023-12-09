@@ -17,6 +17,7 @@ import {
 } from "./ui/tooltip";
 import PeriodicTable from "~/features/map/components/PeriodicTable";
 import { useSettings } from "~/stores/settings";
+import RestartButton from "./RestartButton";
 
 interface GameHandlerProps {
   atoms: AtomsType;
@@ -61,6 +62,7 @@ const GameHandler: React.FC<
             if (collection === "p-block") return atom.block === "p";
             if (collection === "d-block") return atom.block === "d";
             if (collection === "f-block") return atom.block === "f";
+            // TODO other collection filters
             // if (collection === "alkali-metals") return atom.group === 1;
           });
 
@@ -78,21 +80,7 @@ const GameHandler: React.FC<
     <div {...props}>
       <Navbar />
       <div className="flex justify-center">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                onClick={() => progression.reset()}
-                size="icon"
-                variant="ghost"
-                className="text-neutral-500"
-              >
-                <ReloadIcon />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>Restart</TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <RestartButton />
 
         <AtomsCounter
           currentCount={progression.correctAnswers + progression.skippedAnswers}
@@ -104,6 +92,7 @@ const GameHandler: React.FC<
 
         <Button onClick={() => progression.skip()}>Skip</Button>
       </div>
+
       <AnswerContainer />
       <Button onClick={handlePlay}>play!</Button>
 
