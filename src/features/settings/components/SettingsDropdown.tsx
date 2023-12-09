@@ -1,3 +1,5 @@
+// "use client";
+
 import {
   GearIcon,
   GridIcon,
@@ -11,7 +13,12 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { useSettings } from "~/stores/settings";
@@ -24,7 +31,7 @@ const SettingsDropdown: React.FC<
   const settings = useSettings();
 
   return (
-    <DropdownMenu>
+    <DropdownMenu {...props}>
       <DropdownMenuTrigger asChild>
         <Button size="icon" variant="outline">
           <GearIcon />
@@ -33,7 +40,9 @@ const SettingsDropdown: React.FC<
 
       <DropdownMenuContent>
         <DropdownMenuLabel>Settings</DropdownMenuLabel>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuCheckboxItem
           checked={settings.shouldShowTimer}
           onCheckedChange={() => settings.toggleTimer()}
@@ -43,6 +52,7 @@ const SettingsDropdown: React.FC<
             <LapTimerIcon />
           </span>
         </DropdownMenuCheckboxItem>
+
         <DropdownMenuCheckboxItem
           checked={settings.shouldSkipAnimations}
           onCheckedChange={() => settings.toggleAnimations()}
@@ -52,6 +62,7 @@ const SettingsDropdown: React.FC<
             <MagicWandIcon />
           </span>
         </DropdownMenuCheckboxItem>
+
         <DropdownMenuCheckboxItem
           checked={settings.hasSound}
           onCheckedChange={() => settings.toggleSound()}
@@ -71,6 +82,28 @@ const SettingsDropdown: React.FC<
             <GridIcon />
           </span>
         </DropdownMenuCheckboxItem>
+
+        <DropdownMenuCheckboxItem
+          checked={settings.shouldAutoSend}
+          onCheckedChange={() => settings.toggleAutoSend()}
+        >
+          <span className="flex grow items-center justify-between gap-6">
+            Auto send when correct answer
+            <LapTimerIcon />
+          </span>
+        </DropdownMenuCheckboxItem>
+
+        <DropdownMenuSeparator />
+
+        <DropdownMenuSub>
+          <DropdownMenuSubTrigger>Coloring mode</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            <DropdownMenuRadioGroup value="a">
+              <DropdownMenuRadioItem value="a">a</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="b">b</DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
       </DropdownMenuContent>
     </DropdownMenu>
   );

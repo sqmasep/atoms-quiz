@@ -24,7 +24,7 @@ const atom = tv({
 
   slots: {
     wrapper:
-      "flex flex-col justify-between rounded-lg border-2 border-solid border-white px-4 pb-2.5 pt-4",
+      "flex flex-col justify-between rounded-lg border-2 border-solid  px-4 pb-2.5 pt-4",
     atomicNumber: "leading-3",
     symbol: "text-center font-mono text-[2.5rem] font-bold leading-10",
     name: "text-center font-mono tracking-wider text-opacity-40",
@@ -35,9 +35,14 @@ const slots = atom();
 
 const Atom: React.FC<
   AtomProps & Omit<React.ComponentPropsWithoutRef<"div">, keyof AtomProps>
-> = ({ atomicNumber, name, symbol, className, ...props }) => {
+> = ({ atomicNumber, name, symbol, className, color, ...props }) => {
   return (
-    <div {...props} className={slots.wrapper({ className })}>
+    <div
+      {...props}
+      // TODO color styling
+      // style={{ borderColor: color ?? "gray" }}
+      className={slots.wrapper({ className })}
+    >
       <span className={slots.atomicNumber()}>{atomicNumber}</span>
 
       <div className="flex flex-col justify-between gap-2">

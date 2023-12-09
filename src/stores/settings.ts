@@ -9,6 +9,7 @@ export const settingsStore = proxy({
   shouldSkipAnimations: false,
   hasSound: true,
   shouldShowMinimap: true,
+  shouldAutoSend: false,
   guessLanguage: "en" as "en" | "fr",
 
   toggleTimer: (force?: boolean) =>
@@ -21,6 +22,8 @@ export const settingsStore = proxy({
   toggleMinimap: (force?: boolean) =>
     (settingsStore.shouldShowMinimap =
       force ?? !settingsStore.shouldShowMinimap),
+  toggleAutoSend: (force?: boolean) =>
+    (settingsStore.shouldAutoSend = force ?? !settingsStore.shouldAutoSend),
 
   atomView: GUESS_OPTIONS.map(a => a.value),
   toggleAtomView: (value: GuessOptionValue, force?: boolean) => {
