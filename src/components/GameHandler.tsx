@@ -8,16 +8,11 @@ import Navbar from "~/layouts/Navbar";
 import type { AtomsType } from "~/lib/validation/atomSchema";
 import { useProgression } from "~/stores/progression";
 import { Button } from "./ui/button";
-import { ReloadIcon } from "@radix-ui/react-icons";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
 import PeriodicTable from "~/features/map/components/PeriodicTable";
 import { useSettings } from "~/stores/settings";
 import RestartButton from "./RestartButton";
+import useAchievements from "~/features/achievements/hooks/useAchievements";
+import Timer from "~/features/stats/components/Timer";
 
 interface GameHandlerProps {
   atoms: AtomsType;
@@ -31,6 +26,8 @@ const GameHandler: React.FC<
 
   const progression = useProgression();
   const settings = useSettings();
+
+  useAchievements();
 
   useEffect(() => {
     progression.reset();
@@ -53,6 +50,8 @@ const GameHandler: React.FC<
 
   function handlePlay() {
     progression.reset();
+    progression.start();
+    settings.toggleChangedSettingsDuringGame(false);
 
     const collectionAtoms =
       collection === "all"
@@ -93,8 +92,21 @@ const GameHandler: React.FC<
         <Button onClick={() => progression.skip()}>Skip</Button>
       </div>
 
+      <Timer
+        key={progression.hasStarted ? "timer-true" : "timer-false"}
+        finalTime={
+          !!progression.startTime &&
+          (progression.endTime
+            ? progression.endTime - progression.startTime
+            : null)
+        }
+        isRunning={progression.hasStarted}
+      />
+
       <AnswerContainer />
       <Button onClick={handlePlay}>play!</Button>
+      {progression.startTime?.toString()}
+      {progression.endTime?.toString()}
 
       {!!settings.shouldShowMinimap && (
         <PeriodicTable
