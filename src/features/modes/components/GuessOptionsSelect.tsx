@@ -10,12 +10,15 @@ import {
   SelectTrigger,
 } from "~/components/ui/select";
 import useModes from "~/hooks/useModes";
+import type { GuessOptionValue } from "../data/guessOptions";
 import { GUESS_OPTIONS } from "../data/guessOptions";
+import { useSettings } from "~/stores/settings";
 
 const GuessOptionsSelect: React.FC<
   Omit<React.ComponentPropsWithoutRef<typeof Select>, "value" | "onValueChange">
 > = ({ ...props }) => {
   const { guess, setMode } = useModes();
+  const settings = useSettings();
 
   return (
     <Select
@@ -23,6 +26,7 @@ const GuessOptionsSelect: React.FC<
       value={guess}
       onValueChange={val => {
         setMode({ guess: val });
+        settings.toggleAtomView(val as GuessOptionValue, true);
       }}
     >
       <SelectTrigger className="w-[200px]">
