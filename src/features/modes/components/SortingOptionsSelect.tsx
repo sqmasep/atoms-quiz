@@ -19,10 +19,26 @@ import useModes from "~/hooks/useModes";
 import type { NonEmptyTuple } from "~/utils/types";
 
 export const SORTING_OPTIONS = [
-  { value: "Random", icon: <ShuffleIcon /> },
-  { value: "Alphabetical", icon: <LetterCaseCapitalizeIcon /> },
-  { value: "Atomic number", icon: <TokensIcon /> },
-] as const satisfies NonEmptyTuple<{ value: string; icon: React.ReactNode }>;
+  {
+    value: "random",
+    label: "Random",
+    icon: <ShuffleIcon />,
+  },
+  {
+    value: "alphabetical",
+    label: "Alphabetical",
+    icon: <LetterCaseCapitalizeIcon />,
+  },
+  {
+    value: "atomic-number",
+    label: "Atomic number",
+    icon: <TokensIcon />,
+  },
+] as const satisfies NonEmptyTuple<{
+  value: string;
+  label: string;
+  icon: React.ReactNode;
+}>;
 
 export type SortingOptionValue = (typeof SORTING_OPTIONS)[number]["value"];
 
@@ -39,7 +55,9 @@ const SortingOptionsSelect: React.FC<
         setMode({ sort: val });
       }}
     >
-      <SelectTrigger className="w-[200px]">{sort}</SelectTrigger>
+      <SelectTrigger className="w-[200px]">
+        {SORTING_OPTIONS.find(option => option.value === sort)?.label}
+      </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Sorting</SelectLabel>
@@ -48,7 +66,7 @@ const SortingOptionsSelect: React.FC<
               <SelectItem key={option.value} value={option.value}>
                 <span className="flex items-center gap-3">
                   {option.icon}
-                  {option.value}
+                  {option.label}
                 </span>
               </SelectItem>
             )}

@@ -5,6 +5,20 @@ export const progressionStore = proxy({
   atoms: [] as AtomsType,
   currentAtom: null as AtomType | null,
 
+  hasStarted: false,
+  startTime: null as number | null,
+  endTime: null as number | null,
+
+  start: () => {
+    progressionStore.hasStarted = true;
+    progressionStore.startTime = Date.now();
+  },
+
+  end: () => {
+    progressionStore.hasStarted = false;
+    progressionStore.endTime = Date.now();
+  },
+
   correctAnswers: 1,
   incorrectAnswers: 0,
   skippedAnswers: 0,
@@ -52,12 +66,14 @@ export const progressionStore = proxy({
 
   nextQuestion: () => {
     if (progressionStore.currentAtom) {
-      const currentIndex = progressionStore.atoms.indexOf(
-        progressionStore.currentAtom,
-      );
+      const currentIndex = progressionStore.atoms
+        .map(atom => atom.atomicNumber)
+        .indexOf(progressionStore.currentAtom.atomicNumber);
 
       if (currentIndex < progressionStore.atoms.length - 1) {
         progressionStore.currentAtom = progressionStore.atoms[currentIndex + 1];
+      } else {
+        progressionStore.end();
       }
     }
   },

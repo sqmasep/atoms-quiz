@@ -25,7 +25,7 @@ export const atomSchema = object({
     fr: string(),
   }),
   phaseAtSTP: picklist(["gas", "liquid", "solid", "plasma"]),
-  block: string(),
+  block: picklist(["s", "f", "d", "p"]),
   discovery: object({
     by: string(),
     country: string(),
