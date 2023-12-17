@@ -5,17 +5,23 @@ export const progressionStore = proxy({
   atoms: [] as AtomsType,
   currentAtom: null as AtomType | null,
 
-  hasStarted: false,
   startTime: null as number | null,
   endTime: null as number | null,
+  get hasStarted() {
+    return this.startTime !== null;
+  },
+  get hasEnded() {
+    return this.endTime !== null;
+  },
+  get isPlaying() {
+    return this.hasStarted && !this.hasEnded;
+  },
 
   start: () => {
-    progressionStore.hasStarted = true;
     progressionStore.startTime = Date.now();
   },
 
   end: () => {
-    progressionStore.hasStarted = false;
     progressionStore.endTime = Date.now();
   },
 
@@ -29,6 +35,17 @@ export const progressionStore = proxy({
 
   setCurrentAtom: (atom: AtomType) => {
     progressionStore.currentAtom = atom;
+  },
+
+  hasAtomPassed: (atomicNumber: number) => {
+    const atomIndex = progressionStore.atoms
+      .map(atom => atom.atomicNumber)
+      .indexOf(atomicNumber);
+
+    return (
+      atomIndex <
+      progressionStore.correctAnswers + progressionStore.skippedAnswers
+    );
   },
 
   incrementCorrect: () => {
@@ -79,6 +96,10 @@ export const progressionStore = proxy({
   },
 
   reset: () => {
+    progressionStore.startTime = null;
+    progressionStore.endTime = null;
+    progressionStore.currentAtom = null;
+    progressionStore.atoms = [];
     progressionStore.correctAnswers = 0;
     progressionStore.incorrectAnswers = 0;
     progressionStore.skippedAnswers = 0;
