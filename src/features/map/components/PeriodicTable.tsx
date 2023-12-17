@@ -1,3 +1,4 @@
+import List from "~/components/List";
 import { cn } from "~/lib/utils";
 import type { AtomType, AtomsType } from "~/lib/validation/atomSchema";
 
@@ -6,12 +7,15 @@ interface PeriodicTableProps {
   atoms: AtomsType;
 }
 
+const createArray = (from: number, to: number) =>
+  Array.from({ length: to - from + 1 }, (_, i) => from + i);
+
 const PeriodicTable: React.FC<
   PeriodicTableProps &
     Omit<React.ComponentPropsWithoutRef<"div">, keyof PeriodicTableProps>
 > = ({ renderAtom, atoms, ...props }) => {
   return (
-    <div {...props} className={cn("grid-cols-18 grid", props.className)}>
+    <div {...props} className={cn("grid grid-cols-18", props.className)}>
       <div>{renderAtom(atoms[0])}</div>
       <div className="col-span-16" />
       <div>{renderAtom(atoms[1])}</div>
@@ -19,36 +23,39 @@ const PeriodicTable: React.FC<
       <div>{renderAtom(atoms[2])}</div>
       <div>{renderAtom(atoms[3])}</div>
       <div className="col-span-10" />
-      <div>{renderAtom(atoms[4])}</div>
-      <div>{renderAtom(atoms[5])}</div>
-      <div>{renderAtom(atoms[6])}</div>
-      <div>{renderAtom(atoms[7])}</div>
-      <div>{renderAtom(atoms[8])}</div>
-      <div>{renderAtom(atoms[9])}</div>
+
+      <List of={createArray(4, 9)}>
+        {value => <div key={value}>{renderAtom(atoms[value])}</div>}
+      </List>
 
       <div>{renderAtom(atoms[10])}</div>
       <div>{renderAtom(atoms[11])}</div>
       <div className="col-span-10" />
-      <div>{renderAtom(atoms[12])}</div>
-      <div>{renderAtom(atoms[13])}</div>
-      <div>{renderAtom(atoms[14])}</div>
-      <div>{renderAtom(atoms[15])}</div>
-      <div>{renderAtom(atoms[16])}</div>
-      <div>{renderAtom(atoms[17])}</div>
+      <List of={createArray(12, 56)}>
+        {value => <div key={value}>{renderAtom(atoms[value])}</div>}
+      </List>
 
-      <div>{renderAtom(atoms[18])}</div>
-      <div>{renderAtom(atoms[19])}</div>
-      <div>{renderAtom(atoms[20])}</div>
-      <div>{renderAtom(atoms[21])}</div>
-      <div>{renderAtom(atoms[22])}</div>
-      <div>{renderAtom(atoms[23])}</div>
-      <div>{renderAtom(atoms[24])}</div>
-      <div>{renderAtom(atoms[25])}</div>
-      <div>{renderAtom(atoms[26])}</div>
-      <div>{renderAtom(atoms[27])}</div>
-      <div>{renderAtom(atoms[28])}</div>
-      <div>{renderAtom(atoms[29])}</div>
-      <div>{renderAtom(atoms[30])}</div>
+      <List of={createArray(71, 88)}>
+        {value => <div key={value}>{renderAtom(atoms[value])}</div>}
+      </List>
+
+      <List of={createArray(103, 117)}>
+        {value => <div key={value}>{renderAtom(atoms[value])}</div>}
+      </List>
+
+      <div className="col-span-18 h-6" />
+
+      <div className="col-span-3" />
+      <List of={createArray(57, 70)}>
+        {value => <div key={value}>{renderAtom(atoms[value])}</div>}
+      </List>
+      <div className="col-span-1" />
+
+      <div className="col-span-3" />
+      <List of={createArray(89, 102)}>
+        {value => <div key={value}>{renderAtom(atoms[value])}</div>}
+      </List>
+      <div className="col-span-1" />
     </div>
   );
 };
