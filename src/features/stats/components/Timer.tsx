@@ -6,32 +6,26 @@ import dayjs from "dayjs";
 
 interface TimerProps {
   isRunning: boolean;
-  finalTime: number | null | false;
 }
 
-const Timer: React.FC<TimerProps> = ({ isRunning, finalTime }) => {
+const Timer: React.FC<TimerProps> = ({ isRunning }) => {
   const progression = useProgression();
   const [timer, setTimer] = useState<number>(0);
 
   useEffect(() => {
-    if (!isRunning) return;
-
     const interval = setInterval(() => {
-      setTimer(Date.now() - (progression.startTime || 0));
-    }, 100);
+      setTimer(Date.now() - (progression.startTime ?? Date.now()));
+    }, 10);
+
+    if (!isRunning) {
+      clearInterval(interval);
+      return;
+    }
 
     return () => clearInterval(interval);
   }, [progression.hasStarted, progression.startTime, isRunning]);
 
-  // return <div>{dayjs(finalTime || timer * 1000).format("mm:ss")}</div>;
-
-  return (
-    <div>
-      <pre>{JSON.stringify(timer, null, 2)}</pre>
-
-      {dayjs(timer / 1000).format("mm:ss")}
-    </div>
-  );
+  return <div>{dayjs(timer).format("mm:ss:SSS")}</div>;
 };
 
 export default Timer;
