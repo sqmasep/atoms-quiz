@@ -1,5 +1,4 @@
 import { EyeOpenIcon } from "@radix-ui/react-icons";
-import { useId } from "react";
 import List from "~/components/List";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
@@ -35,9 +34,10 @@ const AtomViewSettings: React.FC<
         <span className="mb-4 block font-bold">Atom view settings</span>
 
         <div className="flex flex-col gap-2">
-          <List of={VIEW_OPTIONS} getKey={option => option.value}>
+          <List of={VIEW_OPTIONS}>
             {({ value, label }) => (
               <Label
+                key={value}
                 htmlFor={`atom-view-${value}`}
                 className={cn(
                   "flex w-full justify-between",
