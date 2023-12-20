@@ -65,8 +65,8 @@ export const progressionStore = proxy({
       progressionStore.atoms.length
     ) {
       progressionStore.skippedAnswers++;
+      progressionStore.nextQuestion();
     }
-    progressionStore.nextQuestion();
   },
 
   // WARN just switched to getter and `this`, see if it breaks in the future or not
