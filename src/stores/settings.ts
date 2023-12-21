@@ -20,12 +20,14 @@ const defaultSettings = {
   shouldShowMinimap: true,
   shouldAutoSend: false,
   guessLanguage: "en" as "en" | "fr",
+  coloringMode: "block" as "block" | "group" | "period",
 
   atomView: GUESS_OPTIONS.map(a => a.value),
 
   hasChangedSettingsDuringGame: false,
 } as const;
 
+// INFO since i use safeParse i may not need to use fallbacks, since i'm using the defaults whenever it fails
 const localStorageSettingsSchema = object({
   shouldShowTimer: fallback(boolean(), defaultSettings.shouldShowTimer),
   shouldSkipAnimations: fallback(
@@ -35,13 +37,19 @@ const localStorageSettingsSchema = object({
   hasSound: fallback(boolean(), defaultSettings.hasSound),
   shouldShowMinimap: fallback(boolean(), defaultSettings.shouldShowMinimap),
   shouldAutoSend: fallback(boolean(), defaultSettings.shouldAutoSend),
+  coloringMode: fallback(
+    picklist(["block", "group", "period"]),
+    defaultSettings.coloringMode,
+  ),
   guessLanguage: fallback(
     picklist(["en", "fr"]),
     defaultSettings.guessLanguage,
   ),
 
   atomView: fallback(
-    // FIXME don't know if this actually works
+    // WARN don't know if this actually works
+    // probably, but i'm not sure
+    // FIXME [TS] [GuessOptionValue, ...GuessOptionValue[]] doesn't seem to work
     array(picklist(GUESS_OPTIONS.map(a => a.value))),
     defaultSettings.atomView,
   ),
@@ -54,7 +62,11 @@ const localStorageSettingsSchema = object({
 
 const parsedStoredSettings = safeParse(
   localStorageSettingsSchema,
-  JSON.parse(localStorage.getItem("settings") ?? "{}"),
+  JSON.parse(
+    typeof window === "undefined"
+      ? "{}"
+      : window.localStorage.getItem("settings"),
+  ),
 );
 
 const settings = parsedStoredSettings.success
@@ -77,6 +89,11 @@ export const settingsStore = proxy({
       force ?? !settingsStore.shouldShowMinimap),
   toggleAutoSend: (force?: boolean) =>
     (settingsStore.shouldAutoSend = force ?? !settingsStore.shouldAutoSend),
+
+  // TODO [TS] [COLORING] fix this temporary type to avoid repetition
+  setColoringMode: (value: "block" | "group" | "period") => {
+    settingsStore.coloringMode = value;
+  },
 
   // Atom view related properties
   toggleAtomView: (value: GuessOptionValue, force?: boolean) => {
