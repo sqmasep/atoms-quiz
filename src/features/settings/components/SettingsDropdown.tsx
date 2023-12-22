@@ -1,5 +1,3 @@
-// "use client";
-
 import {
   GearIcon,
   GridIcon,
@@ -98,9 +96,18 @@ const SettingsDropdown: React.FC<
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>Coloring mode</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
-            <DropdownMenuRadioGroup value="a">
-              <DropdownMenuRadioItem value="a">a</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="b">b</DropdownMenuRadioItem>
+            <DropdownMenuRadioGroup
+              value={settings.coloringMode}
+              onValueChange={val =>
+                // TODO [TS] [COLORING] use a shared type for that
+                settings.setColoringMode(val as "block" | "group" | "period")
+              }
+            >
+              <DropdownMenuRadioItem value="block">Block</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="group">Group</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="period">
+                Period
+              </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>
         </DropdownMenuSub>

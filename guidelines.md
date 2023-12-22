@@ -15,4 +15,5 @@
 
 #### Specific tags
 
-- `[GUESS]` - About guess feature
+- `[GUESS]` - From Guess feature
+- `[COLORING]` - From Coloring feature
