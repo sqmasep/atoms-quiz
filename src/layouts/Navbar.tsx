@@ -1,7 +1,13 @@
-"use client";
-
+import { IdCardIcon } from "@radix-ui/react-icons";
 import { useEffect } from "react";
+import { Button } from "~/components/ui/button";
 import { Progress } from "~/components/ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import AnswerOptionsSelect from "~/features/modes/components/AnswerOptionsSelect";
 import CollectionOptionsSelect from "~/features/modes/components/CollectionOptionsSelect";
 import GuessOptionsSelect from "~/features/modes/components/GuessOptionsSelect";
@@ -11,7 +17,6 @@ import useModes from "~/hooks/useModes";
 import { useProgression } from "~/stores/progression";
 
 const Navbar: React.FC = () => {
-  // TODO use `useModes` or something for the selected options
   const { answerType, collection, guess, sort } = useModes();
   const progression = useProgression();
 
@@ -32,7 +37,19 @@ const Navbar: React.FC = () => {
           <CollectionOptionsSelect />
         </div>
 
-        <SettingsDropdown />
+        <div className="flex items-center gap-2">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button size="icon" variant="outline">
+                  <IdCardIcon />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Achievements</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+          <SettingsDropdown />
+        </div>
       </div>
     </>
   );
