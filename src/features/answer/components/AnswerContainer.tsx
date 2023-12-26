@@ -9,6 +9,8 @@ import { useSettings } from "~/stores/settings";
 import Atom from "~/components/Atom";
 import AtomViewSettings from "~/features/settings/components/AtomViewSettings";
 import { COLORS } from "~/data/colors";
+import { cn } from "~/lib/utils";
+import { escapeSpecialChars, normalizeString } from "~/utils/formatString";
 
 interface AnswerContainerProps {}
 
@@ -22,7 +24,7 @@ const AnswerContainer: React.FC<
 
   const { currentAtom } = progression;
 
-  function compareAnswer(atom: AtomType, answer: string) {
+  function compareAnswer(atom: AtomType, guessString: string) {
     const answers = {
       "atomic-number": atom.atomicNumber,
       block: atom.block,
@@ -34,11 +36,10 @@ const AnswerContainer: React.FC<
       group: atom.atomicNumber,
     } as const satisfies Record<typeof guess, unknown>;
 
-    // TODO [GUESS] handle accents & remove special characters
-    const formattedGuess = answers[guess].toString().trim().toLowerCase();
-    const formattedAnswer = answer.trim().toLowerCase();
+    const formattedAnswer = normalizeString(answers[guess].toString());
+    const formattedGuess = escapeSpecialChars(normalizeString(guessString));
 
-    return formattedGuess === formattedAnswer;
+    return formattedAnswer === formattedGuess;
   }
 
   function giveAGuess(guessValue: string) {
@@ -67,7 +68,7 @@ const AnswerContainer: React.FC<
     settings.atomView.includes(param);
 
   return (
-    <div {...props} className="mx-auto mt-48 max-w-3xl">
+    <div {...props} className={cn("mx-auto max-w-3xl", props.className)}>
       <AtomViewSettings />
       <Atom
         atomicNumber={
@@ -83,7 +84,12 @@ const AnswerContainer: React.FC<
             </div>
           )
         }
-        color={COLORS[currentAtom?.block ?? "s"]}
+        color=""
+        animate={
+          {
+            // background,
+          }
+        }
         name={
           shouldShow("name") ? (
             guess !== "name" ? (
