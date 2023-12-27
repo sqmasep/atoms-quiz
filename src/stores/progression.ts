@@ -1,12 +1,15 @@
 import { proxy, useSnapshot } from "valtio";
 import type { AtomType, AtomsType } from "~/lib/validation/atomSchema";
 
+let lastReactionTime = 0;
+
 export const progressionStore = proxy({
   atoms: [] as AtomsType,
   currentAtom: null as AtomType | null,
 
   startTime: null as number | null,
   endTime: null as number | null,
+
   get hasStarted() {
     return this.startTime !== null;
   },
@@ -17,8 +20,16 @@ export const progressionStore = proxy({
     return this.hasStarted && !this.hasEnded;
   },
 
+  get currentIndex() {
+    if (!progressionStore.currentAtom) return 0;
+
+    return this.correctAnswers + this.skippedAnswers - 1;
+  },
+
   start: () => {
-    progressionStore.startTime = Date.now();
+    const now = Date.now();
+    progressionStore.startTime = now;
+    lastReactionTime = now;
   },
 
   end: () => {
@@ -28,6 +39,11 @@ export const progressionStore = proxy({
   correctAnswers: 1,
   incorrectAnswers: 0,
   skippedAnswers: 0,
+
+  reactionTime: [] as {
+    time: number;
+    isSkipped?: boolean;
+  }[],
 
   setAtoms: (atoms: AtomsType) => {
     progressionStore.atoms = atoms;
@@ -65,7 +81,7 @@ export const progressionStore = proxy({
       progressionStore.atoms.length
     ) {
       progressionStore.skippedAnswers++;
-      progressionStore.nextQuestion();
+      progressionStore.nextQuestion({ isSkipped: true });
     }
   },
 
@@ -81,17 +97,22 @@ export const progressionStore = proxy({
     );
   },
 
-  nextQuestion: () => {
-    if (progressionStore.currentAtom) {
-      const currentIndex = progressionStore.atoms
-        .map(atom => atom.atomicNumber)
-        .indexOf(progressionStore.currentAtom.atomicNumber);
+  nextQuestion: (config?: { isSkipped?: boolean }) => {
+    if (!progressionStore.currentAtom) return;
 
-      if (currentIndex < progressionStore.atoms.length - 1) {
-        progressionStore.currentAtom = progressionStore.atoms[currentIndex + 1];
-      } else {
-        progressionStore.end();
-      }
+    const currentIndex = progressionStore.atoms
+      .map(atom => atom.atomicNumber)
+      .indexOf(progressionStore.currentAtom.atomicNumber);
+
+    if (currentIndex < progressionStore.atoms.length - 1) {
+      progressionStore.reactionTime.push({
+        time: Date.now() - lastReactionTime,
+        isSkipped: config?.isSkipped,
+      });
+      lastReactionTime = Date.now();
+      progressionStore.currentAtom = progressionStore.atoms[currentIndex + 1];
+    } else {
+      progressionStore.end();
     }
   },
 
@@ -103,6 +124,7 @@ export const progressionStore = proxy({
     progressionStore.correctAnswers = 0;
     progressionStore.incorrectAnswers = 0;
     progressionStore.skippedAnswers = 0;
+    progressionStore.reactionTime = [];
   },
 });
 
