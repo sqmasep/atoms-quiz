@@ -25,33 +25,28 @@ const Navbar: React.FC = () => {
   }, [answerType, collection, guess, sort]);
 
   return (
-    <>
-      <Progress value={progression.getProgressPercentage} />
-      {progression.hasWon ? "you won!" : ""}
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <AnswerOptionsSelect />
-          <SortingOptionsSelect />
-          <GuessOptionsSelect />
-          <CollectionOptionsSelect />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size="icon" variant="outline">
-                  <IdCardIcon />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>Achievements</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <SettingsDropdown />
-        </div>
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-1">
+        <AnswerOptionsSelect />
+        <SortingOptionsSelect />
+        <GuessOptionsSelect />
+        <CollectionOptionsSelect />
       </div>
-    </>
+
+      <div className="flex items-center gap-2">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="icon" variant="outline">
+                <IdCardIcon />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Achievements</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <SettingsDropdown />
+      </div>
+    </div>
   );
 };
 

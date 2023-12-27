@@ -14,9 +14,8 @@ export default async function Home() {
 
   return (
     <main>
-      {/* <Navbar /> */}
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[url('/noise.gif')] bg-[length:300px] opacity-5" />
-      <div className="pointer-events-none fixed top-10 -z-10 h-1/3 w-1/2 bg-slate-600 blur-[400px]" />
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[url('/noise.gif')] bg-[length:300px] opacity-[3%]" />
+      <div className="pointer-events-none fixed top-10 -z-10 h-1/3 w-1/2 bg-slate-600 bg-opacity-20 blur-[400px]" />
 
       <GameHandler atoms={atoms} />
     </main>
