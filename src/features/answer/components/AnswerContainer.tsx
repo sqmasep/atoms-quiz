@@ -11,6 +11,8 @@ import AtomViewSettings from "~/features/settings/components/AtomViewSettings";
 import { COLORS } from "~/data/colors";
 import { cn } from "~/lib/utils";
 import { escapeSpecialChars, normalizeString } from "~/utils/formatString";
+import { Progress } from "~/components/ui/progress";
+import { motion } from "framer-motion";
 
 interface AnswerContainerProps {}
 
@@ -55,6 +57,11 @@ const AnswerContainer: React.FC<
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (!settings.shouldAutoSend || !currentAtom || progression.hasWon) return;
 
+    // TODO add first letter time stat
+    // if (!progression.firstLetterTime[progression.currentIndex])
+    //   console.log(progression.firstLetterTime);
+    // progression.addFirstLetterTime();
+
     const value = e.target.value;
 
     if (compareAnswer(currentAtom, value)) {
@@ -68,9 +75,33 @@ const AnswerContainer: React.FC<
     settings.atomView.includes(param);
 
   return (
-    <div {...props} className={cn("mx-auto max-w-3xl", props.className)}>
+    <div
+      {...props}
+      className={cn("flex flex-col items-center gap-4", props.className)}
+    >
       <AtomViewSettings />
+      <motion.div
+        animate={{
+          backgroundColor: COLORS.block[currentAtom?.block ?? "s"],
+          scale: [1, 1.5],
+        }}
+        transition={{
+          backgroundColor: { duration: 1 },
+          scale: { duration: 12, repeat: Infinity, repeatType: "mirror" },
+        }}
+        className="pointer-events-none absolute h-32 w-32 select-none rounded-full blur-[200px]"
+      />
+
+      <span className="text-xs">
+        {(
+          progression.atoms[progression.currentIndex]?.name.en.length /
+          (progression.reactionTime[progression.currentIndex]?.time / 1000)
+        ).toFixed(2)}{" "}
+        <span className="text-zinc-500">chars/s</span>
+      </span>
+
       <Atom
+        className="h-32 w-32"
         atomicNumber={
           shouldShow("atomic-number") ? (
             guess !== "atomic-number" ? (
@@ -119,6 +150,16 @@ const AnswerContainer: React.FC<
           )
         }
       />
+
+      <div>
+        <Progress
+          className=" max-w-[150px]"
+          value={progression.getProgressPercentage}
+        />
+        <span className="text-xs text-zinc-500">
+          {progression.getProgressPercentage.toFixed(2)}%
+        </span>
+      </div>
 
       {answerType === "write-answer" && (
         <WriteAnswerInput onChange={handleChange} giveAGuess={giveAGuess} />
