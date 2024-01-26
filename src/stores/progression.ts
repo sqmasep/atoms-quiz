@@ -1,6 +1,9 @@
 import { proxy, useSnapshot } from "valtio";
 import type { AtomType, AtomsType } from "~/lib/validation/atomSchema";
 
+type ProgressionStatus = "reset" | "playing" | "ended" | "post-match";
+
+// That's a timestamp btw
 let lastReactionTime = 0;
 
 export const progressionStore = proxy({
@@ -9,6 +12,11 @@ export const progressionStore = proxy({
 
   startTime: null as number | null,
   endTime: null as number | null,
+  status: "reset" as ProgressionStatus,
+
+  setStatus: (status: ProgressionStatus) => {
+    progressionStore.status = status;
+  },
 
   get hasStarted() {
     return this.startTime !== null;
@@ -17,12 +25,10 @@ export const progressionStore = proxy({
     return this.endTime !== null;
   },
   get isPlaying() {
-    return this.hasStarted && !this.hasEnded;
+    return this.status === "playing";
   },
 
   get currentIndex() {
-    if (!progressionStore.currentAtom) return 0;
-
     return this.correctAnswers + this.skippedAnswers - 1;
   },
 
@@ -30,10 +36,12 @@ export const progressionStore = proxy({
     const now = Date.now();
     progressionStore.startTime = now;
     lastReactionTime = now;
+    progressionStore.setStatus("playing");
   },
 
   end: () => {
     progressionStore.endTime = Date.now();
+    progressionStore.status = "ended";
   },
 
   correctAnswers: 1,
@@ -44,6 +52,16 @@ export const progressionStore = proxy({
     time: number;
     isSkipped?: boolean;
   }[],
+
+  firstLetterTime: [] as {
+    time: number;
+  }[],
+
+  addFirstLetterTime: () => {
+    progressionStore.firstLetterTime.push({
+      time: Date.now() - lastReactionTime,
+    });
+  },
 
   setAtoms: (atoms: AtomsType) => {
     progressionStore.atoms = atoms;
@@ -105,26 +123,29 @@ export const progressionStore = proxy({
       .indexOf(progressionStore.currentAtom.atomicNumber);
 
     if (currentIndex < progressionStore.atoms.length - 1) {
-      progressionStore.reactionTime.push({
-        time: Date.now() - lastReactionTime,
-        isSkipped: config?.isSkipped,
-      });
-      lastReactionTime = Date.now();
       progressionStore.currentAtom = progressionStore.atoms[currentIndex + 1];
     } else {
       progressionStore.end();
     }
+
+    progressionStore.reactionTime.push({
+      time: Date.now() - lastReactionTime,
+      isSkipped: config?.isSkipped,
+    });
+    lastReactionTime = Date.now();
   },
 
   reset: () => {
     progressionStore.startTime = null;
     progressionStore.endTime = null;
     progressionStore.currentAtom = null;
-    progressionStore.atoms = [];
+    progressionStore.currentIndex = -1;
     progressionStore.correctAnswers = 0;
     progressionStore.incorrectAnswers = 0;
     progressionStore.skippedAnswers = 0;
     progressionStore.reactionTime = [];
+    progressionStore.firstLetterTime = [];
+    progressionStore.status = "reset";
   },
 });
 
