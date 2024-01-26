@@ -35,18 +35,19 @@ const AtomViewSettings: React.FC<
 
         <div className="flex flex-col gap-2">
           <List of={VIEW_OPTIONS}>
-            {({ value, label }) => (
+            {({ value, label, isDisabled }) => (
               <Label
                 key={value}
                 htmlFor={`atom-view-${value}`}
                 className={cn(
                   "flex w-full justify-between",
-                  value === guess && "cursor-not-allowed text-zinc-600",
+                  (value === guess || isDisabled) &&
+                    "cursor-not-allowed text-zinc-600",
                 )}
               >
-                {label}
+                {label} {isDisabled && " (Coming soon)"}
                 <Switch
-                  disabled={value === guess}
+                  disabled={value === guess || isDisabled}
                   id={`atom-view-${value}`}
                   checked={settings.atomView.includes(value)}
                   onCheckedChange={() => settings.toggleAtomView(value)}

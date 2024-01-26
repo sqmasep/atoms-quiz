@@ -24,21 +24,25 @@ export const GUESS_OPTIONS = [
   {
     value: "group",
     label: "Group",
+    isDisabled: true,
     icon: <GroupIcon />,
   },
   {
     value: "period",
     label: "Period",
+    isDisabled: true,
     icon: <GroupIcon />,
   },
   {
     value: "block",
     label: "Block",
+    isDisabled: true,
     icon: <GroupIcon />,
   },
 ] as const satisfies NonEmptyTuple<{
   value: string;
   label: string;
+  isDisabled?: boolean;
   icon: React.ReactNode;
 }>;
 
