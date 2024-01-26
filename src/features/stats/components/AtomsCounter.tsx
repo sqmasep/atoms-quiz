@@ -27,14 +27,14 @@ const AtomsCounter: React.FC<AtomsCounterProps> = ({
   <div className="flex items-center justify-center gap-4">
     <div className="flex items-end font-mono">
       <span className="text-2xl font-bold">{currentCount}</span>
-      <span className="text-lg text-slate-400">/{outOf}</span>
+      <span className="text-lg text-zinc-500">/{outOf}</span>
     </div>
 
     <div className="relative z-10 flex items-center gap-4 overflow-clip rounded-full border border-solid border-zinc-800 px-4 ">
       <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
       <TooltipProvider>
         <Tooltip delayDuration={100}>
-          <TooltipTrigger>
+          <TooltipTrigger tabIndex={-1}>
             <RollingCounter
               prevCountProps={{ className: "text-green-700 opacity-25" }}
               countProps={{ className: "text-green-400" }}
@@ -48,7 +48,7 @@ const AtomsCounter: React.FC<AtomsCounterProps> = ({
 
       <TooltipProvider>
         <Tooltip delayDuration={100}>
-          <TooltipTrigger>
+          <TooltipTrigger tabIndex={-1}>
             <RollingCounter
               prevCountProps={{ className: "text-red-700 opacity-25" }}
               countProps={{ className: "text-red-400" }}
@@ -73,7 +73,7 @@ const AtomsCounter: React.FC<AtomsCounterProps> = ({
 
       <TooltipProvider>
         <Tooltip delayDuration={100}>
-          <TooltipTrigger>
+          <TooltipTrigger tabIndex={-1}>
             <RollingCounter
               count={skippedCount}
               prevCountProps={{ className: "text-amber-700 opacity-25" }}
