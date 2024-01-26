@@ -33,10 +33,15 @@ const AnswerOptionsSelect: React.FC<
           <SelectLabel>Answer type</SelectLabel>
           <List of={ANSWER_TYPE_OPTIONS}>
             {option => (
-              <SelectItem key={option.value} value={option.value}>
+              <SelectItem
+                disabled={option.isDisabled}
+                key={option.value}
+                value={option.value}
+              >
                 <span className="flex items-center gap-3">
                   {option.icon}
                   {option.label}
+                  {option.isDisabled && " (Coming soon)"}
                 </span>
               </SelectItem>
             )}
