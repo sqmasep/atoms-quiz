@@ -10,27 +10,28 @@ export const COLLECTION_OPTIONS = [
   {
     value: "extended",
     label: "Extended (183)",
+    isDisabled: true,
     icon: <EnterFullScreenIcon />,
   },
 
   {
     value: "s-block",
-    label: "S-Block",
+    label: "S-Block (14)",
     icon: <CommitIcon />,
   },
   {
     value: "f-block",
-    label: "F-Block",
+    label: "F-Block (27)",
     icon: <CommitIcon />,
   },
   {
     value: "d-block",
-    label: "D-Block",
+    label: "D-Block (41)",
     icon: <CommitIcon />,
   },
   {
     value: "p-block",
-    label: "P-Block",
+    label: "P-Block (36)",
     icon: <CommitIcon />,
   },
   // {
@@ -86,6 +87,7 @@ export const COLLECTION_OPTIONS = [
 ] as const satisfies NonEmptyTuple<{
   value: string;
   label: string;
+  isDisabled?: boolean;
   icon: React.ReactNode;
 }>;
 
