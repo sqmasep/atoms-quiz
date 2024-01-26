@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import { tv } from "tailwind-variants";
 import type { Nullish } from "~/utils/types";
 
@@ -34,22 +35,41 @@ const atom = tv({
 const slots = atom();
 
 const Atom: React.FC<
-  AtomProps & Omit<React.ComponentPropsWithoutRef<"div">, keyof AtomProps>
+  AtomProps &
+    Omit<React.ComponentPropsWithoutRef<typeof motion.div>, keyof AtomProps>
 > = ({ atomicNumber, name, symbol, className, color, ...props }) => {
   return (
-    <div
-      {...props}
-      // TODO color styling
-      // style={{ borderColor: color ?? "gray" }}
-      className={slots.wrapper({ className })}
-    >
-      <span className={slots.atomicNumber()}>{atomicNumber}</span>
+    <AnimatePresence mode="popLayout">
+      <motion.div
+        {...props}
+        // TODO color styling
+        style={{ borderColor: color ?? "gray" }}
+        key={atomicNumber}
+        initial={{
+          scale: 1.25,
+          opacity: 0,
+        }}
+        animate={{
+          scale: 1,
+          opacity: 1,
+        }}
+        transition={{
+          duration: 0.1,
+        }}
+        exit={{
+          scale: 1.25,
+          opacity: 0,
+        }}
+        className={slots.wrapper({ className })}
+      >
+        <span className={slots.atomicNumber()}>{atomicNumber}</span>
 
-      <div className="flex flex-col justify-between gap-2">
-        <span className={slots.symbol()}>{symbol}</span>
-        <span className={slots.name()}>{name}</span>
-      </div>
-    </div>
+        <div className="flex flex-col justify-between gap-2">
+          <span className={slots.symbol()}>{symbol}</span>
+          <span className={slots.name()}>{name}</span>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
