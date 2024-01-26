@@ -8,7 +8,9 @@ interface TimerProps {
   isRunning: boolean;
 }
 
-const Timer: React.FC<TimerProps> = ({ isRunning }) => {
+const Timer: React.FC<
+  TimerProps & Omit<React.ComponentPropsWithoutRef<"span">, keyof TimerProps>
+> = ({ isRunning, ...props }) => {
   const progression = useProgression();
   const [timer, setTimer] = useState<number>(0);
 
@@ -17,15 +19,26 @@ const Timer: React.FC<TimerProps> = ({ isRunning }) => {
       setTimer(Date.now() - (progression.startTime ?? Date.now()));
     }, 10);
 
-    if (!isRunning) {
+    if (progression.status === "ended") {
+      clearInterval(interval);
+      return;
+    }
+
+    if (progression.status === "reset") {
+      setTimer(0);
       clearInterval(interval);
       return;
     }
 
     return () => clearInterval(interval);
-  }, [progression.hasStarted, progression.startTime, isRunning]);
+  }, [
+    progression.hasStarted,
+    progression.startTime,
+    isRunning,
+    progression.status,
+  ]);
 
-  return <div>{dayjs(timer).format("mm:ss:SSS")}</div>;
+  return <span {...props}>{dayjs(timer).format("mm:ss:SSS")}</span>;
 };
 
 export default Timer;
