@@ -13,6 +13,11 @@ export const ANSWER_TYPE_OPTIONS = [
     label: "Write answer",
     icon: <KeyboardIcon />,
   },
+  {
+    value: "map",
+    label: "Map",
+    icon: <KeyboardIcon />,
+  },
 ] as const satisfies NonEmptyTuple<{
   value: string;
   label: string;
