@@ -51,7 +51,7 @@ const SettingsDropdown: React.FC<
           </span>
         </DropdownMenuCheckboxItem>
 
-        <DropdownMenuCheckboxItem
+        {/* <DropdownMenuCheckboxItem
           checked={settings.shouldSkipAnimations}
           onCheckedChange={() => settings.toggleAnimations()}
         >
@@ -59,14 +59,15 @@ const SettingsDropdown: React.FC<
             Skip animations
             <MagicWandIcon />
           </span>
-        </DropdownMenuCheckboxItem>
+        </DropdownMenuCheckboxItem> */}
 
         <DropdownMenuCheckboxItem
           checked={settings.hasSound}
           onCheckedChange={() => settings.toggleSound()}
+          disabled
         >
           <span className="flex grow items-center justify-between gap-6">
-            Enable sound
+            Enable sound (Coming soon)
             <SpeakerLoudIcon />
           </span>
         </DropdownMenuCheckboxItem>
@@ -104,9 +105,11 @@ const SettingsDropdown: React.FC<
               }
             >
               <DropdownMenuRadioItem value="block">Block</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="group">Group</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="period">
-                Period
+              <DropdownMenuRadioItem value="group" disabled>
+                Group (Coming soon)
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="period" disabled>
+                Period (Coming soon)
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </DropdownMenuSubContent>

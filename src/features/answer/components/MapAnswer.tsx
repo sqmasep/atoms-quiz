@@ -15,7 +15,7 @@ const MapAnswer: React.FC<
   const modes = useModes();
   const progression = useProgression();
 
-  const handleGuess = (atom: AtomType) => () => {
+  const handleGuess = (atom: AtomType) => {
     if (atom.atomicNumber === progression.currentAtom?.atomicNumber) {
       progression.incrementCorrect();
       progression.nextQuestion();
@@ -29,23 +29,40 @@ const MapAnswer: React.FC<
       <PeriodicTable
         className="gap-0.5"
         atoms={defaultAtoms.atoms}
-        renderAtom={atom => (
-          <button
-            type="button"
-            onClick={handleGuess(atom)}
-            className={cn(
-              "relative grid aspect-square w-8 place-items-center rounded-md border border-border text-sm font-bold hover:bg-zinc-800/25",
-              progression.hasAtomPassed(atom.atomicNumber) && "bg-blue-900",
-            )}
-          >
-            <span
-              className={cn("absolute left-1 top-1 text-[.25rem] leading-none")}
+        renderAtom={atom => {
+          const isAtomInCollection = progression.isAtomInCollection(
+            atom.atomicNumber,
+          );
+          const hasPassed = progression.hasAtomPassed(atom.atomicNumber);
+
+          return (
+            <button
+              tabIndex={!isAtomInCollection ? -1 : 0}
+              type="button"
+              onClick={() =>
+                isAtomInCollection && !hasPassed && handleGuess(atom)
+              }
+              className={cn(
+                "relative grid aspect-square w-8 place-items-center rounded-md border border-border text-sm font-bold hover:bg-zinc-800/25",
+                hasPassed && "bg-blue-900 hover:bg-blue-800",
+                !isAtomInCollection && "cursor-not-allowed",
+              )}
             >
-              {atom.atomicNumber}
-            </span>
-            <span className={cn("blur-[2px]")}>{atom.symbol}</span>
-          </button>
-        )}
+              {!!isAtomInCollection && (
+                <>
+                  <span
+                    className={cn(
+                      "absolute left-1 top-1 text-[.25rem] leading-none",
+                    )}
+                  >
+                    {atom.atomicNumber}
+                  </span>
+                  <span className={cn("blur-[2px]")}>{atom.symbol}</span>
+                </>
+              )}
+            </button>
+          );
+        }}
       />
     </div>
   );

@@ -4,7 +4,7 @@ import type { AtomType, AtomsType } from "~/lib/validation/atomSchema";
 
 interface PeriodicTableProps {
   renderAtom: (atom: AtomType) => React.ReactNode;
-  atoms: AtomsType;
+  atoms: AtomsType | Readonly<AtomsType>;
 }
 
 const createArray = (from: number, to: number) =>
