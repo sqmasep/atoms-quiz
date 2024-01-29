@@ -76,10 +76,18 @@ export const progressionStore = proxy({
       .map(atom => atom.atomicNumber)
       .indexOf(atomicNumber);
 
+    if (atomIndex === -1) return false;
+
     return (
       atomIndex <
       progressionStore.correctAnswers + progressionStore.skippedAnswers
     );
+  },
+
+  isAtomInCollection: (atomicNumber: number) => {
+    return progressionStore.atoms
+      .map(atom => atom.atomicNumber)
+      .includes(atomicNumber);
   },
 
   incrementCorrect: () => {
