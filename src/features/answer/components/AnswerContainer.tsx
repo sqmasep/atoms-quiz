@@ -13,6 +13,7 @@ import { cn } from "~/lib/utils";
 import { escapeSpecialChars, normalizeString } from "~/utils/formatString";
 import { Progress } from "~/components/ui/progress";
 import { motion } from "framer-motion";
+import MapAnswer from "./MapAnswer";
 
 interface AnswerContainerProps {}
 
@@ -74,6 +75,11 @@ const AnswerContainer: React.FC<
   const shouldShow = (param: (typeof settings.atomView)[number]) =>
     settings.atomView.includes(param);
 
+  const diff = (
+    progression.atoms[progression.currentIndex]?.name.en.length /
+    (progression.reactionTime[progression.currentIndex]?.time / 1000)
+  ).toFixed(2);
+
   return (
     <div
       {...props}
@@ -92,13 +98,11 @@ const AnswerContainer: React.FC<
         className="pointer-events-none absolute h-32 w-32 select-none rounded-full blur-[200px]"
       />
 
-      <span className="text-xs">
-        {(
-          progression.atoms[progression.currentIndex]?.name.en.length /
-          (progression.reactionTime[progression.currentIndex]?.time / 1000)
-        ).toFixed(2)}{" "}
-        <span className="text-zinc-500">chars/s</span>
-      </span>
+      {!Number.isNaN(diff) && (
+        <span className="text-xs">
+          {diff} <span className="text-zinc-500">chars/s</span>
+        </span>
+      )}
 
       <Atom
         className="h-32 w-32"
@@ -165,6 +169,7 @@ const AnswerContainer: React.FC<
         <WriteAnswerInput onChange={handleChange} giveAGuess={giveAGuess} />
       )}
       {answerType === "options" && <ChoiceCards />}
+      {answerType === "map" && <MapAnswer />}
     </div>
   );
 };
