@@ -11,12 +11,15 @@ import { Button } from "./ui/button";
 import PeriodicTable from "~/features/map/components/PeriodicTable";
 import { useSettings } from "~/stores/settings";
 import RestartButton from "./RestartButton";
-import useAchievements from "~/features/achievements/hooks/useAchievements";
 import Timer from "~/features/stats/components/Timer";
-import { cn } from "~/lib/utils";
 import { COLORS } from "~/data/colors";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon } from "@radix-ui/react-icons";
+import ReactionTime from "~/features/stats/components/ReactionTime";
+// import AchievementsHandler from "~/features/achievements/components/AchievementsHandler";
+import { cn } from "~/lib/utils";
+import ReactionTimeList from "~/features/stats/components/ReactionTimeList";
+import { useDefaultAtoms } from "~/stores/defaultAtoms";
 
 interface GameHandlerProps {
   atoms: AtomsType;
@@ -26,32 +29,14 @@ const GameHandler: React.FC<
   GameHandlerProps &
     Omit<React.ComponentPropsWithoutRef<"div">, keyof GameHandlerProps>
 > = ({ atoms, ...props }) => {
-  const { answerType, collection, guess, sort } = useModes();
+  const { collection, guess, sort } = useModes();
+  const defaultAtoms = useDefaultAtoms();
+  defaultAtoms.setAtoms(atoms);
 
   const progression = useProgression();
   const settings = useSettings();
 
-  useAchievements();
-
-  useEffect(() => {
-    progression.reset();
-    const sortedAtoms = atoms.toSorted((a, b) => {
-      if (sort === "random") return Math.random() - 0.5;
-      if (sort === "atomic-number") return a.atomicNumber - b.atomicNumber;
-      return 0;
-    });
-
-    progression.setAtoms(sortedAtoms);
-    progression.setCurrentAtom(sortedAtoms[0]);
-  }, [sort, guess]);
-
-  // useEffect(() => {}, [answerType, collection, guess, sort]);
-
-  function handlePlay() {
-    progression.reset();
-    progression.start();
-    settings.toggleChangedSettingsDuringGame(false);
-
+  function setAtomsFromOptions() {
     const collectionAtoms =
       collection === "all"
         ? atoms
@@ -67,47 +52,129 @@ const GameHandler: React.FC<
     const sortedAtoms = collectionAtoms.toSorted((a, b) => {
       if (sort === "random") return Math.random() - 0.5;
       if (sort === "atomic-number") return a.atomicNumber - b.atomicNumber;
+      if (sort === "alphabetical")
+        return a.name[settings.guessLanguage].localeCompare(
+          b.name[settings.guessLanguage],
+        );
       return 0;
     });
 
     progression.setAtoms(sortedAtoms);
-    progression.setCurrentAtom(sortedAtoms[0]);
+
+    return sortedAtoms;
+  }
+
+  useEffect(() => {
+    progression.reset();
+    setAtomsFromOptions();
+  }, [sort, guess, collection]);
+
+  function handlePlay() {
+    progression.reset();
+    progression.start();
+    settings.toggleChangedSettingsDuringGame(false);
+
+    const atoms = setAtomsFromOptions();
+    progression.setCurrentAtom(atoms[0]);
   }
 
   return (
     <div {...props}>
       <Navbar />
-      <div className="flex justify-center">
+      <div className="mt-6 flex items-center justify-center gap-2">
         <RestartButton />
+        {/* <AchievementsHandler /> */}
 
         <AtomsCounter
-          currentCount={progression.correctAnswers + progression.skippedAnswers}
+          currentCount={progression.currentIndex + 1}
           outOf={progression.atoms.length}
           correctCount={progression.correctAnswers}
           incorrectCount={progression.incorrectAnswers}
           skippedCount={progression.skippedAnswers}
         />
 
-        <Button onClick={() => progression.skip()}>Skip</Button>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => progression.isPlaying && progression.skip()}
+        >
+          Skip
+        </Button>
       </div>
 
-      <Timer
-        finalTime={
-          !!progression.startTime &&
-          (progression.endTime
-            ? progression.endTime - progression.startTime
-            : null)
-        }
-        isRunning={progression.isPlaying}
-      />
+      <div
+        className={cn(
+          "mt-12 flex flex-col items-center justify-center transition-opacity",
+          !settings.shouldShowTimer && "opacity-0",
+        )}
+      >
+        <Timer
+          className="text-center text-2xl font-bold"
+          isRunning={progression.isPlaying}
+        />
+        <AnimatePresence>
+          {!!progression.hasWon &&
+            progression.endTime !== null &&
+            progression.endTime !== 0 &&
+            progression.startTime !== null &&
+            progression.startTime !== 0 && (
+              <motion.span
+                initial={{ height: 0 }}
+                animate={{ height: "auto" }}
+                exit={{ height: 0 }}
+                className="overflow-clip text-zinc-500"
+              >
+                Average reaction time{" "}
+                <span className="font-bold text-zinc-200">
+                  {(
+                    (progression.endTime - progression.startTime) /
+                    progression.atoms.length /
+                    1000
+                  ).toFixed(2)}
+                  s
+                </span>
+              </motion.span>
+            )}
+        </AnimatePresence>
 
-      <AnswerContainer />
-      <Button onClick={handlePlay}>play!</Button>
-      {progression.startTime?.toString()}
-      {progression.endTime?.toString()}
+        <ReactionTime
+          key={progression.currentIndex}
+          time={progression.reactionTime[progression.currentIndex]?.time ?? 0}
+        />
+      </div>
 
+      <div className="mx-auto flex max-w-fit flex-wrap justify-center gap-8">
+        <div className="flex flex-col items-center gap-2">
+          <AnswerContainer />
+
+          {!progression.isPlaying && (
+            <Button onClick={handlePlay} variant="outline">
+              Play
+            </Button>
+          )}
+        </div>
+
+        {/* ReactionTimeList */}
+        <AnimatePresence mode="wait">
+          {progression.status === "ended" && (
+            <motion.div
+              initial={{ width: 0 }}
+              animate={{ width: "auto" }}
+              exit={{ width: 0 }}
+            >
+              <ReactionTimeList />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* {progression.firstLetterTime.map(r => (
+        <div>{r.time}</div>
+      ))} */}
+
+      {/* Minimap */}
       {!!settings.shouldShowMinimap && (
-        <div className="fixed bottom-4 right-4 rounded-lg bg-gradient-to-br  from-zinc-400/10 to-transparent p-4 backdrop-blur-2xl">
+        <div className="fixed bottom-4 right-4 rounded-lg bg-gradient-to-br  from-zinc-400/10 to-transparent p-4 ">
           <div className="mx-auto flex max-w-md flex-wrap justify-center gap-1">
             {Object.entries(COLORS.family).map(([name, color]) => (
               <span
