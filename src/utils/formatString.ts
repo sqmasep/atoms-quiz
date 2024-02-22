@@ -1,4 +1,4 @@
-const specialCharsRegex = /[/' "\-()`.,:;!?€^*%£¤µ§°=+{}[\]|\\<>@#&~]/g;
+const specialCharsRegex = /[/' "\-()`.,:;!?€^*%£¤µ§°=+{}[\]|\\<>@#&~_]/g;
 const accentRegex = /é|è|ê|à|â|ç|î|ô|ù|û/g;
 
 export function normalizeString(string: string) {
