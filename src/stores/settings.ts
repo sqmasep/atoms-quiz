@@ -16,7 +16,7 @@ import {
 const defaultSettings = {
   shouldShowTimer: true,
   shouldSkipAnimations: false,
-  hasSound: true,
+  hasSound: false,
   shouldShowMinimap: true,
   shouldAutoSend: false,
   guessLanguage: "en" as "en" | "fr",
