@@ -25,8 +25,8 @@ const Navbar: React.FC = () => {
   }, [answerType, collection, guess, sort]);
 
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-1">
+    <div className="flex items-center justify-between p-2">
+      <div className="flex flex-wrap items-center gap-1">
         <AnswerOptionsSelect />
         <SortingOptionsSelect />
         <GuessOptionsSelect />
